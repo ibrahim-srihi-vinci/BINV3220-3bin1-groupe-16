@@ -97,3 +97,22 @@ describe("GET /offers : visibilité selon le profil", () => {
     );
   });
 });
+
+describe("GET /offers : filtre par période", () => {
+  it("filtre les offres par période sans modifier la visibilité du profil", async () => {
+    const response = await listOffersAs("ADMIN", ADMINISTRATOR.ANNE_LECLERCQ)
+      .query({ period: "P1" });
+
+    expect(response.status).toBe(200);
+    expect(offerIds(response.body)).toEqual([OFFER.PDF_REPORTS]);
+    expect(response.body.every((offer: { period: string }) => offer.period === "P1")).toBe(true);
+  });
+
+  it("refuse une période inconnue", async () => {
+    const response = await listOffersAs("ADMIN", ADMINISTRATOR.ANNE_LECLERCQ)
+      .query({ period: "P3" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe("INVALID_QUERY");
+  });
+});

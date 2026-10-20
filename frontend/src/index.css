@@ -29,6 +29,115 @@ body {
   padding: 1.5rem;
 }
 
+.offers-page h1 {
+  margin: 0.15rem 0 0.35rem;
+  color: #111827;
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  letter-spacing: -0.04em;
+}
+
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.page-description {
+  margin: 0;
+  color: #6b7280;
+}
+
+.offers-summary {
+  display: flex;
+  flex-direction: column;
+  min-width: 5.5rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+}
+
+.offers-summary-value {
+  color: #1d4ed8;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.offers-summary-label {
+  color: #1e40af;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.offers-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgb(15 23 42 / 5%);
+}
+
+.toolbar-title,
+.toolbar-description {
+  margin: 0;
+}
+
+.toolbar-title {
+  color: #111827;
+  font-weight: 700;
+}
+
+.toolbar-description {
+  margin-top: 0.15rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.period-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 12rem;
+  color: #374151;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.period-filter select {
+  min-height: 2.5rem;
+  padding: 0.45rem 2rem 0.45rem 0.75rem;
+  color: #1f2937;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.period-filter select:focus,
+.search-field input:focus {
+  outline: 3px solid rgb(59 130 246 / 20%);
+  border-color: #2563eb;
+}
+
 .state {
   padding: 0.75rem 1rem;
   border-radius: 6px;
@@ -133,6 +242,10 @@ body {
 
 .data-table tbody tr:last-child td {
   border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f8fafc;
 }
 
 /* Statuts */
@@ -258,4 +371,24 @@ body {
 .status-badge-info {
   color: #1e40af;
   background-color: #dbeafe;
+}
+
+@media (max-width: 640px) {
+  .app-main {
+    padding: 1.25rem 1rem;
+  }
+
+  .page-heading,
+  .offers-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .offers-summary {
+    align-self: flex-start;
+  }
+
+  .period-filter {
+    min-width: 0;
+  }
 }
