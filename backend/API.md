@@ -138,7 +138,7 @@ récente à la plus ancienne, puis de la plus récente à la plus ancienne.
 | Profil | Offres retournées |
 |---|---|
 | Administrateur | Toutes |
-| Étudiant | Les offres publiées |
+| Étudiant | Les offres publiées de l'année académique courante |
 | Contact déposant | Les offres qu'il a déposées, quel que soit leur statut |
 | Contact sans rôle de déposant | Aucun accès (403) |
 
@@ -150,7 +150,8 @@ récente à la plus ancienne, puis de la plus récente à la plus ancienne.
 
 ### Réponses
 
-- `200` : tableau d'offres
+- `200` : tableau d'offres. Pour un étudiant, seules les offres publiées de l'année
+  académique courante sont retournées.
 
 ```json
 [
@@ -171,3 +172,45 @@ récente à la plus ancienne, puis de la plus récente à la plus ancienne.
 - `401` `UNAUTHENTICATED` : session absente ou invalide.
 - `403` `FORBIDDEN` : contact seulement promoteur ou signataire.
 - `400` `INVALID_QUERY` : `period` est répété ou ne vaut pas `P1`, `P2` ou `OTHER`.
+
+## GET /applications
+
+Liste les candidatures de l'étudiant connecté pour l'année académique courante.
+
+- Header `Authorization` obligatoire.
+- `200` : tableau de candidatures avec `id`, `offerId`, `offerTitle`,
+  `companyShortName`, `academicYear`, `period`, `message`, `status` et `appliedAt`.
+- `status` vaut `IN_PROGRESS` (En cours), `SELECTED` (Retenue), `REJECTED`
+  (Non retenue) ou `WITHDRAWN` (Retirée).
+- `403` `FORBIDDEN` : l'utilisateur connecté n'est pas un étudiant.
+
+## POST /applications
+
+Crée une candidature pour l'étudiant connecté.
+
+### Requête
+
+```json
+{ "offerId": 3, "message": "Mon message facultatif" }
+```
+
+`message` est facultatif, trimé et limité à 1000 caractères. L'offre doit être publiée
+et appartenir à l'année courante. Une candidature active ou traitée pour la même offre
+est refusée ; une candidature retirée peut être suivie d'une nouvelle candidature.
+
+### Réponses
+
+- `201` : la candidature créée.
+- `400` `INVALID_BODY` : corps ou message invalide.
+- `403` `FORBIDDEN` : l'utilisateur connecté n'est pas un étudiant.
+- `409` `APPLICATION_NOT_ALLOWED` : l'offre n'est pas disponible ou une candidature
+  existe déjà.
+
+## DELETE /applications/:id
+
+Retire la candidature de l'étudiant connecté si elle est encore `IN_PROGRESS`.
+
+- `204` : candidature retirée.
+- `403` `FORBIDDEN` : l'utilisateur connecté n'est pas un étudiant.
+- `404` `NOT_FOUND` : candidature absente ou appartenant à un autre étudiant.
+- `409` `APPLICATION_NOT_WITHDRAWABLE` : candidature déjà traitée.
