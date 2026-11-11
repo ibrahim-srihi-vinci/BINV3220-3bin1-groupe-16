@@ -47,19 +47,25 @@ describe("POST /applications", () => {
     );
   });
 
-  it("refuse une offre non publiée et les doublons actifs", async () => {
+  it("refuse une candidature à une offre non publiée", async () => {
     const token = tokenFor("STUDENT", STUDENT.LUCAS_DUPONT);
     const unpublished = await request(app)
       .post("/applications")
       .set("Authorization", token)
       .send({ offerId: OFFER.CLIENT_PORTAL });
-    const duplicate = await request(app)
-      .post("/applications")
-      .set("Authorization", token)
-      .send({ offerId: OFFER.FLEET_APP });
 
     expect(unpublished.status).toBe(409);
+    expect(unpublished.body.error.code).toBe("APPLICATION_NOT_ALLOWED");
+  });
+
+  it("refuse les doublons actifs", async () => {
+    const duplicate = await request(app)
+      .post("/applications")
+      .set("Authorization", tokenFor("STUDENT", STUDENT.LUCAS_DUPONT))
+      .send({ offerId: OFFER.FLEET_APP });
+
     expect(duplicate.status).toBe(409);
+    expect(duplicate.body.error.code).toBe("APPLICATION_NOT_ALLOWED");
   });
 });
 
@@ -84,5 +90,33 @@ describe("DELETE /applications/:id", () => {
       .set("Authorization", tokenFor("STUDENT", STUDENT.MATEUSZ_KOWALSKI));
 
     expect(response.status).toBe(409);
+    expect(response.body.error.code).toBe("APPLICATION_NOT_WITHDRAWABLE");
+  });
+
+  it("empêche un étudiant de retirer la candidature d'un autre", async () => {
+    const response = await request(app)
+      .delete(`/applications/${APPLICATION.INES_FLEET_APP}`)
+      .set("Authorization", tokenFor("STUDENT", STUDENT.LUCAS_DUPONT));
+
+    expect(response.status).toBe(404);
+    expect(response.body.error.code).toBe("NOT_FOUND");
+  });
+});
+
+describe("GET /applications : statuts", () => {
+  it.each([
+    ["en cours", STUDENT.LUCAS_DUPONT, "IN_PROGRESS"],
+    ["retenue", STUDENT.MATEUSZ_KOWALSKI, "SELECTED"],
+    ["non retenue", STUDENT.LEA_MERTENS, "REJECTED"],
+    ["retirée", STUDENT.INES_HADDAD, "WITHDRAWN"],
+  ] as const)("retourne le statut %s", async (_label, studentId, status) => {
+    const response = await request(app)
+      .get("/applications")
+      .set("Authorization", tokenFor("STUDENT", studentId));
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([expect.objectContaining({ status })]),
+    );
   });
 });
