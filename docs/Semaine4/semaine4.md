@@ -7,7 +7,7 @@
 | Parcours frontend de candidature (ApplyForm) | `ApplicationsPage.test.tsx:54` ne teste pas le formulaire. | Manque confirmé, mais hors backend. |
 | États frontend de EF-33 (chargement, erreur, liste vide) | `ApplicationsPage.test.tsx:54` vérifie les 4 statuts. | Manque confirmé. |
 
-Test ajouté : Dans le fichier ApplyForm.test.tsx, X tests ont été ajouté. Résultat : X/X tests passent. Ils sont passés du premier coup, donc le code était déjà correct. Les tests couvrent maintenant tous les cas. 
+Test ajouté : Dans le fichier ApplyForm.test.tsx, 4 tests ont été ajoutés. Résultat : 4/4 tests passent. Ils sont passés du premier coup, donc le code était déjà correct. Les tests couvrent maintenant tous les cas. 
 
 ----------------------
 
