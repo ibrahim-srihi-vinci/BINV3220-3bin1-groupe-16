@@ -14,5 +14,8 @@ export const openDatabase = (path: string): Db => {
   const db = new Database(path);
   // SQLite n'applique les clés étrangères que si elles sont activées à chaque connexion.
   db.pragma("foreign_keys = ON");
+  db.function("unicodeLower", { deterministic: true }, (text: unknown) =>
+    typeof text === "string" ? text.toLocaleLowerCase("fr") : null,
+  );
   return db;
 };

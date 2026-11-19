@@ -38,6 +38,14 @@ Authorization: {{student.response.body.token}}
 GET http://localhost:3000/offers
 Authorization: {{depositor.response.body.token}}
 
+### Recherche dans les titres, combinée à la période
+GET http://localhost:3000/offers?q=application&period=P2
+Authorization: {{admin.response.body.token}}
+
+### Recherche vide
+GET http://localhost:3000/offers?q=%20%20%20
+Authorization: {{student.response.body.token}}
+
 ### Erreur 403 : promotrice et signataire
 GET http://localhost:3000/offers
 Authorization: {{promoter.response.body.token}}
