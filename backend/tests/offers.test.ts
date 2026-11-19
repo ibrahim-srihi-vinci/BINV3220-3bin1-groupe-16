@@ -116,3 +116,53 @@ describe("GET /offers : filtre par période", () => {
     expect(response.body.error.code).toBe("INVALID_QUERY");
   });
 });
+
+describe("GET /offers : recherche par mot-clé", () => {
+  it("cherche l'expression entière dans le titre sans tenir compte de la casse", async () => {
+    const response = await listOffersAs("ADMIN", ADMINISTRATOR.ANNE_LECLERCQ)
+      .query({ q: "  QUALITÉ DES DONNÉES  " });
+
+    expect(response.status).toBe(200);
+    expect(offerIds(response.body)).toEqual([OFFER.DATA_QUALITY]);
+  });
+
+  it("cherche les mots comme une expression entière et non comme des mots séparés", async () => {
+    const response = await listOffersAs("ADMIN", ADMINISTRATOR.ANNE_LECLERCQ)
+      .query({ q: "qualité données" });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it("ignore une recherche vide", async () => {
+    const response = await listOffersAs("ADMIN", ADMINISTRATOR.ANNE_LECLERCQ)
+      .query({ q: "   " });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(10);
+  });
+
+  it("retourne une liste vide lorsqu'aucun titre ne correspond", async () => {
+    const response = await listOffersAs("ADMIN", ADMINISTRATOR.ANNE_LECLERCQ)
+      .query({ q: "intranet" });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it("combine la recherche avec le filtre par période", async () => {
+    const response = await listOffersAs("ADMIN", ADMINISTRATOR.ANNE_LECLERCQ)
+      .query({ q: "module", period: "P2" });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it("conserve la visibilité étudiant pendant la recherche", async () => {
+    const response = await listOffersAs("STUDENT", STUDENT.LUCAS_DUPONT)
+      .query({ q: "portail" });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+});

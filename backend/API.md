@@ -147,6 +147,9 @@ récente à la plus ancienne, puis de la plus récente à la plus ancienne.
 - Header `Authorization` obligatoire
 - Paramètre facultatif `period` : `P1`, `P2` ou `OTHER`. Sans ce paramètre, toutes les
   offres normalement visibles sont retournées.
+- Paramètre facultatif `q` : texte contenu dans le titre, sans distinguer les majuscules
+  des minuscules. Les espaces au début et à la fin sont ignorés ; une valeur vide ne filtre pas.
+  Les expressions contenant plusieurs mots sont recherchées intégralement.
 
 ### Réponses
 

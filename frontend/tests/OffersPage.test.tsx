@@ -56,6 +56,58 @@ describe("OffersPage", () => {
     );
   });
 
+  it("transmet le texte recherché tronqué et le combine à la période", async () => {
+    const fetchMock = stubFetch({ "/api/offers": () => Response.json([]) });
+
+    render(<OffersPage user={contactUser} token="jeton" onUnauthorized={vi.fn()} />);
+
+    fireEvent.change(screen.getByLabelText("Période"), { target: { value: "P2" } });
+    fireEvent.change(screen.getByLabelText("Rechercher par titre"), {
+      target: { value: "  QUALITÉ DES DONNÉES  " },
+    });
+
+    await waitFor(() =>
+      expect(fetchMock).toHaveBeenLastCalledWith(
+        "/api/offers?q=QUALIT%C3%89+DES+DONN%C3%89ES&period=P2",
+        expect.objectContaining({ headers: { Authorization: "jeton" } }),
+      ),
+    );
+  });
+
+  it("envoie une recherche vide sans paramètre q", async () => {
+    const fetchMock = stubFetch({ "/api/offers": () => Response.json(offers) });
+
+    render(<OffersPage user={contactUser} token="jeton" onUnauthorized={vi.fn()} />);
+    await screen.findByText("Refonte du portail client");
+
+    fireEvent.change(screen.getByLabelText("Rechercher par titre"), {
+      target: { value: "   " },
+    });
+
+    await waitFor(() =>
+      expect(fetchMock).toHaveBeenLastCalledWith(
+        "/api/offers",
+        expect.objectContaining({ headers: { Authorization: "jeton" } }),
+      ),
+    );
+  });
+
+  it("affiche un message adapté lorsqu'aucune offre ne correspond", async () => {
+    stubFetch({
+      "/api/offers?q=introuvable": () => Response.json([]),
+      "/api/offers": () => Response.json(offers),
+    });
+
+    render(<OffersPage user={studentUser} token="jeton" onUnauthorized={vi.fn()} />);
+    await screen.findByText("Refonte du portail client");
+
+    fireEvent.change(screen.getByLabelText("Rechercher par titre"), {
+      target: { value: "introuvable" },
+    });
+
+    expect(await screen.findByText("Aucune offre ne correspond à la recherche.")).toBeInTheDocument();
+  });
+
   it("adapte la description au profil", async () => {
     stubFetch({ "/api/offers": () => Response.json([]) });
 

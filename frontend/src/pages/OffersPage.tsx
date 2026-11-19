@@ -3,6 +3,7 @@ import EmptyState from "../components/EmptyState.tsx";
 import ErrorState from "../components/ErrorState.tsx";
 import LoadingState from "../components/LoadingState.tsx";
 import OfferTable from "../components/OfferTable.tsx";
+import SearchField from "../components/SearchField.tsx";
 import { useOffers } from "../hooks/useOffers.ts";
 import type { PeriodCode } from "../models/offer.ts";
 import type { User } from "../models/user.ts";
@@ -21,12 +22,23 @@ const DESCRIPTIONS = {
 
 const OffersPage = ({ user, token, onUnauthorized }: OffersPageProps) => {
   const [period, setPeriod] = useState<PeriodCode | undefined>();
-  const { offers, isLoading, error } = useOffers(token, period, onUnauthorized);
+  const [search, setSearch] = useState("");
+  const { offers, isLoading, error } = useOffers(token, period, search, onUnauthorized);
 
   const renderContent = () => {
     if (error) return <ErrorState message={error} />;
     if (isLoading) return <LoadingState />;
-    if (offers.length === 0) return <EmptyState message="Aucune offre à afficher." />;
+    if (offers.length === 0) {
+      return (
+        <EmptyState
+          message={
+            search.trim() === ""
+              ? "Aucune offre à afficher."
+              : "Aucune offre ne correspond à la recherche."
+          }
+        />
+      );
+    }
     return (
       <>
         <p className="result-count">
@@ -58,8 +70,13 @@ const OffersPage = ({ user, token, onUnauthorized }: OffersPageProps) => {
       <div className="offers-toolbar">
         <div>
           <p className="toolbar-title">Filtrer les offres</p>
-          <p className="toolbar-description">Affichez uniquement les offres d'une période.</p>
+          <p className="toolbar-description">Affichez les offres par période ou par titre.</p>
         </div>
+        <SearchField
+          label="Rechercher par titre"
+          value={search}
+          onChange={setSearch}
+        />
         <label className="period-filter" htmlFor="offer-period">
           <span>Période</span>
           <select

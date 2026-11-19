@@ -46,3 +46,7 @@ See [`docs/architecture.md`](../docs/architecture.md), [`backend/API.md`](../bac
 - Frontend services validate API JSON with the existing type guards/utilities. Hooks expose display-ready state and handle 401 responses through the session callback; do not call `useAuth` from individual pages or hooks.
 - Follow the existing feature path when adding behavior: backend route/controller, service and permission rule, repository/model/mapper, API tests; then frontend service, hook/page/components, and UI tests as applicable.
 - Update `backend/API.md` and the relevant `backend/http/*.http` examples when changing the API. Keep the pull request checklist in `.github/pull_request_template.md` aligned with the change, including the feature requirement, validation commands, authorization coverage, migration status, and browser-test notes.
+
+Pour tout ajout de fonctionnalité ou correction de bug, lis et applique .github/skills/test-driven-development/SKILL.md avant de modifier le code de l’application. Écris et exécute les tests d’abord, présente-les, puis attends leur validation explicite avant l’implémentation. Cette règle ne concerne pas les demandes d’explication ou de documentation seules.
+
+
