@@ -185,3 +185,16 @@ dist/assets/index-DHtPPxz-.css    4.76 kB │ gzip:  1.49 kB
 dist/assets/index-DQJhaKZs.js   277.51 kB │ gzip: 87.23 kB
 
 ✓ built in 273ms
+
+
+# Verification
+désactivé temporairement le filtrage de la recherche dans offers.repository.ts, en forçant searchPattern à null. Le test ciblé « cherche l’expression entière dans le titre sans tenir compte de la casse », dans offers.test.ts, a alors échoué sur son assertion : il attendait une offre, mais en recevait dix. L’échec provenait donc bien du défaut introduit, et non d’un problème de configuration ou de connexion.
+
+# Comparaison
+
+1. Que permet Playwright MCP dans la conversation avec l’agent ? Quelle action précise
+avez-vous vu passer par un outil MCP ?
+2. Qu’apportent les scripts Playwright Test que le compte rendu d’un test par MCP
+n’apporte pas ?
+3. Dans quel cas préféreriez-vous une exploration interactive avec MCP ? Dans quel cas
+préféreriez-vous un test automatisé ?
