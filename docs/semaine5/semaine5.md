@@ -20,12 +20,12 @@ MCP n'a pas fonctionné chez nous.
 ## Fichiers crées : 
 
 e2e/recherches-offres/recherche-offres.spec.ts
-e2e/recherches-offres
 
 ## Principales assertions
 
-
-TO DO 
+Le test vérifie d'abord que la page s'affiche bien avec son titre principal après la connexion. 
+Ensuite, quand on tape un mot-clé dans la barre de recherche, il s'assure que seule la bonne offre apparaît à l'écran et que les autres disparaissent. 
+Enfin, si on cherche quelque chose qui n'existe pas, il vérifie que le tableau disparaît et qu'un message "aucune offre n'a été trouvée" est affiché.
 
 
 ## Deux exécutions successives 
@@ -188,13 +188,18 @@ dist/assets/index-DQJhaKZs.js   277.51 kB │ gzip: 87.23 kB
 
 
 # Verification
-désactivé temporairement le filtrage de la recherche dans offers.repository.ts, en forçant searchPattern à null. Le test ciblé « cherche l’expression entière dans le titre sans tenir compte de la casse », dans offers.test.ts, a alors échoué sur son assertion : il attendait une offre, mais en recevait dix. L’échec provenait donc bien du défaut introduit, et non d’un problème de configuration ou de connexion.
+
+Désactiver temporairement le filtrage de la recherche dans offers.repository.ts, en forçant searchPattern à null. Le test ciblé « cherche l’expression entière dans le titre sans tenir compte de la casse », dans offers.test.ts, a alors échoué sur son assertion : il attendait une offre, mais en recevait dix. L’échec provenait donc bien du défaut introduit, et non d’un problème de configuration ou de connexion.
 
 # Comparaison
 
 1. Que permet Playwright MCP dans la conversation avec l’agent ? Quelle action précise
 avez-vous vu passer par un outil MCP ?
+
 2. Qu’apportent les scripts Playwright Test que le compte rendu d’un test par MCP
 n’apporte pas ?
+
 3. Dans quel cas préféreriez-vous une exploration interactive avec MCP ? Dans quel cas
 préféreriez-vous un test automatisé ?
+
+Nous avons pas pu utiliser Playwright MCP car il n'a pas fonctionné sur nos machines donc pas possible de faire la comparaison
